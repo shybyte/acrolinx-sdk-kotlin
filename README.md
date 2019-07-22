@@ -4,6 +4,14 @@ Unofficial, experimental and totally incomplete Kotlin client library for the Ac
 
 You can find the official Acrolinx SDKs at [https://github.com/acrolinx](https://github.com/acrolinx).
 
+## Integration Tests
+
+In order to run the integration tests:
+* You need an Acrolinx server
+* You need to create an .env file similar to the .env.template file. Alternately you can set the corresponding env variables in a different way.
+
+
+
 ## License
 
 Copyright 2019-present Marco Stahl
