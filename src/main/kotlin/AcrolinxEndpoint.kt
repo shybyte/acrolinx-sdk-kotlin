@@ -63,9 +63,6 @@ class AcrolinxEndpoint(
     ): SignInSuccess {
         val signInResponse =
             fetchFromApiPath("auth/sign-ins", SignInResponseSerializer, HttpMethod.Post, accessToken = accessToken)
-        if (signInResponse is SignInResponse.Success) {
-            return signInResponse.data
-        }
 
         return when (signInResponse) {
             is SignInResponse.Success -> signInResponse.data
