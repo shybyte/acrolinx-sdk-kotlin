@@ -22,7 +22,7 @@ import kotlinx.serialization.json.JsonObject
 import platform.Capabilities
 import java.net.URL
 
-const val HOUR = 60L * 60 * 1000
+private const val HOUR_MS = 60L * 60 * 1000
 
 class AcrolinxEndpoint(
     private val clientSignature: String,
@@ -59,7 +59,7 @@ class AcrolinxEndpoint(
     fun singInInteractive(
         callback: InteractiveCallback<URL>,
         accessToken: AccessToken? = null,
-        timeoutMs: Long = HOUR
+        timeoutMs: Long = HOUR_MS
     ): SignInSuccess {
         val signInResponse =
             fetchFromApiPath("auth/sign-ins", SignInResponseSerializer, HttpMethod.Post, accessToken = accessToken)
