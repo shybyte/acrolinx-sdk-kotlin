@@ -12,7 +12,7 @@ Have a look at [AcrolinxEndpoint](./src/main/kotlin/AcrolinxEndpoint.kt) and use
 
 In order to run the integration tests:
 * You need an Acrolinx server
-* You need to create an .env file similar to the .env.template file. Alternately you can set the corresponding env variables in a different way.
+* You need to create an .env file similar to the [.env.template](.env.template) file. Alternately you can set the corresponding env variables in a different way.
 
 ## License
 
