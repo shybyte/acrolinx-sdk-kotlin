@@ -28,12 +28,12 @@ class AcrolinxEndpoint(
     private val clientSignature: String,
     private val clientVersion: String,
     private var clientLocale: String,
-    acrolinxURL: String,
+    acrolinxUrl: String,
     private var enableHttpLogging: Boolean = false
 ) {
-    private val acrolinxURL = Url(acrolinxURL)
+    private val acrolinxUrl = Url(acrolinxUrl)
     private val jsonDeserializer = Json(JsonConfiguration.Stable.copy(strictMode = false))
-    private val client: HttpClient = HttpClient(Apache) {
+    private val httpClient: HttpClient = HttpClient(Apache) {
         if (enableHttpLogging) {
             install(Logging) {
                 logger = Logger.DEFAULT
@@ -112,7 +112,7 @@ class AcrolinxEndpoint(
         block: (HttpRequestBuilder.() -> Unit) = {}
     ): T =
         fetchFromUrl(
-            acrolinxURL.copy(encodedPath = acrolinxURL.encodedPath + "api/v1/" + path.encodeURLPath()),
+            acrolinxUrl.copy(encodedPath = acrolinxUrl.encodedPath + "api/v1/" + path.encodeURLPath()),
             deserializer,
             httpMethod,
             accessToken,
@@ -127,10 +127,10 @@ class AcrolinxEndpoint(
         block: (HttpRequestBuilder.() -> Unit) = {}
     ): T {
         val jsonObject = runBlocking {
-            client.request<JsonObject>(url) {
+            httpClient.request<JsonObject>(url) {
                 method = httpMethod
                 contentType(ContentType.Application.Json)
-                header("X-Acrolinx-Base-Url", acrolinxURL)
+                header("X-Acrolinx-Base-Url", acrolinxUrl)
                 header("X-Acrolinx-Client-Locale", clientLocale)
                 header("X-Acrolinx-Client", "$clientSignature; $clientVersion")
                 if (accessToken != null) {
