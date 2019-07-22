@@ -1,6 +1,8 @@
 package integration
 
 import assertk.assertThat
+import assertk.assertions.isEqualTo
+import assertk.assertions.isNotNull
 import assertk.assertions.isNull
 import assertk.assertions.startsWith
 import com.acrolinx.client.sdk.AcrolinxEndpoint
@@ -46,7 +48,10 @@ class SignInInteractiveTest {
             }
         }, timeoutMs = 10, accessToken = ACROLINX_API_TOKEN);
 
-        assertThat(signInSuccess.user.username).equals(ACROLINX_API_USERNAME)
         assertThat(interactiveUrl).isNull()
+
+        assertThat(signInSuccess.user.username).isEqualTo(ACROLINX_API_USERNAME)
+        assertThat(signInSuccess.authorizedUsing).isEqualTo("ACROLINX_TOKEN")
+        assertThat(signInSuccess.integration.properties["ca.filter"]).isNotNull()
     }
 }
