@@ -19,6 +19,7 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import kotlinx.serialization.json.JsonObject
+import platform.Capabilities
 import java.net.URL
 
 const val HOUR = 60L * 60 * 1000
@@ -76,10 +77,7 @@ class AcrolinxEndpoint(
     }
 
     @Throws(SignInException::class)
-    private fun pollForInteractiveSignIn(
-        signInResponse: SignInResponse.SignInLinks,
-        timeoutMs: Long
-    ): SignInSuccess {
+    private fun pollForInteractiveSignIn(signInResponse: SignInResponse.SignInLinks, timeoutMs: Long): SignInSuccess {
         val endTime = System.currentTimeMillis() + timeoutMs
 
         while (endTime > System.currentTimeMillis()) {
@@ -97,6 +95,9 @@ class AcrolinxEndpoint(
 
         throw SignInException()
     }
+
+    fun getCapabilities(accessToken: AccessToken): Capabilities =
+        fetchDataFromApiPath("capabilities", Capabilities.serializer(), accessToken = accessToken)
 
     private fun <T> fetchDataFromApiPath(
         path: String,
