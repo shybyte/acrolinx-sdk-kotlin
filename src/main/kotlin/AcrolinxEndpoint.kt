@@ -77,12 +77,12 @@ class AcrolinxEndpoint(
     private fun pollForInteractiveSignIn(signInResponse: SignInResponse.SignInLinks, timeoutMs: Long): SignInSuccess {
         val endTime = System.currentTimeMillis() + timeoutMs
 
-        while (endTime > System.currentTimeMillis()) {
+        while (System.currentTimeMillis() < endTime) {
             when (val pollResponse = fetchFromUrl(Url(signInResponse.links.poll), SignInPollResponseSerializer)) {
                 is SignInPollResponse.Success -> return pollResponse.data
                 is SignInPollResponse.Progress -> {
                     val sleepTimeMs = (pollResponse.progress.retryAfter * 1000).toLong()
-                    if (sleepTimeMs + System.currentTimeMillis() > endTime) {
+                    if (System.currentTimeMillis() + sleepTimeMs > endTime) {
                         throw SignInException()
                     }
                     Thread.sleep(sleepTimeMs)
