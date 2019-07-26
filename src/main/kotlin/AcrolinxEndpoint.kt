@@ -56,7 +56,7 @@ class AcrolinxEndpoint(
     }
 
     @Throws(SignInException::class)
-    fun singInInteractive(
+    fun signInInteractive(
         callback: InteractiveCallback<URL>,
         accessToken: AccessToken? = null,
         timeoutMs: Long = HOUR_MS

@@ -2,21 +2,15 @@ package integration
 
 import assertk.assertThat
 import assertk.assertions.isNotEmpty
-import assertk.assertions.startsWith
-import com.acrolinx.client.sdk.AcrolinxEndpoint
+import org.junit.Assume.assumeTrue
 import kotlin.test.BeforeTest
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 
-class GetCapabilitiesTest {
-    private lateinit var acrolinxEndpoint: AcrolinxEndpoint
-
+class GetCapabilitiesTest: BaseIntegrationTest(){
     @BeforeTest
     fun beforeTest() {
-        org.junit.Assume.assumeTrue(ACROLINX_URL != null)
-        org.junit.Assume.assumeTrue(ACROLINX_API_TOKEN !== null)
-        acrolinxEndpoint = createTestAcrolinxEndpoint()
+        assumeTrue(ACROLINX_API_TOKEN !== null)
     }
 
     @Test
