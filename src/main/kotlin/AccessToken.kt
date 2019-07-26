@@ -3,7 +3,9 @@ package com.acrolinx.client.sdk
 import kotlinx.serialization.*
 
 @Serializable
-data class AccessToken(val token: String)
+data class AccessToken(val token: String) {
+    override fun toString() = "Access token is hidden for security reason"
+}
 
 @Serializer(forClass = AccessToken::class)
 object AccessTokenSerializer : KSerializer<AccessToken> {
