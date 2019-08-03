@@ -1,7 +1,7 @@
 package manual
 
 import com.acrolinx.client.sdk.InteractiveCallback
-import integration.createTestAcrolinxEndpoint
+import integration.common.createTestAcrolinxEndpoint
 import java.net.URL
 
 object SignInInteractiveExample {

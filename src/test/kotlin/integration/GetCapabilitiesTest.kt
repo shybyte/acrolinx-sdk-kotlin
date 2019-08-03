@@ -2,6 +2,8 @@ package integration
 
 import assertk.assertThat
 import assertk.assertions.isNotEmpty
+import integration.common.ACROLINX_API_TOKEN
+import integration.common.BaseIntegrationTest
 import org.junit.Assume.assumeTrue
 import kotlin.test.BeforeTest
 import kotlin.test.Test

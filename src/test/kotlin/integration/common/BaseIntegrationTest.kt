@@ -1,4 +1,4 @@
-package integration
+package integration.common
 
 import com.acrolinx.client.sdk.AcrolinxEndpoint
 import org.junit.Assume.assumeTrue

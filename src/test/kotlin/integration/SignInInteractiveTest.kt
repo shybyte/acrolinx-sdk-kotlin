@@ -4,6 +4,10 @@ import assertk.assertThat
 import assertk.assertions.*
 import com.acrolinx.client.sdk.InteractiveCallback
 import com.acrolinx.client.sdk.exceptions.SignInException
+import integration.common.ACROLINX_API_TOKEN
+import integration.common.ACROLINX_API_USERNAME
+import integration.common.ACROLINX_URL
+import integration.common.BaseIntegrationTest
 import java.net.URL
 import kotlin.test.BeforeTest
 import kotlin.test.Test

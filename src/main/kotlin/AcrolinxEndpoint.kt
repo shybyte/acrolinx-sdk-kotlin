@@ -21,6 +21,7 @@ import kotlinx.serialization.json.JsonConfiguration
 import kotlinx.serialization.json.JsonObject
 import platform.Capabilities
 import java.net.URL
+import java.util.concurrent.Future
 
 private const val HOUR_MS = 60L * 60 * 1000
 
@@ -95,6 +96,7 @@ class AcrolinxEndpoint(
 
     fun getCapabilities(accessToken: AccessToken): Capabilities =
         fetchDataFromApiPath("capabilities", Capabilities.serializer(), accessToken = accessToken)
+
 
     private fun <T> fetchDataFromApiPath(
         path: String,

@@ -1,4 +1,4 @@
-package integration
+package integration.common
 
 import com.acrolinx.client.sdk.AccessToken
 import com.acrolinx.client.sdk.AcrolinxEndpoint

@@ -1,5 +1,8 @@
 package integration
 
+import integration.common.ACROLINX_API_SSO_TOKEN
+import integration.common.ACROLINX_API_USERNAME
+import integration.common.BaseIntegrationTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals

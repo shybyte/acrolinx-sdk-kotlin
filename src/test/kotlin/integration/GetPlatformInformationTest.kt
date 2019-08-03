@@ -2,6 +2,7 @@ package integration
 
 import assertk.assertThat
 import assertk.assertions.startsWith
+import integration.common.BaseIntegrationTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
