@@ -7,7 +7,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 
-class GetPlatformInformationTest: BaseIntegrationTest() {
+class GetPlatformInformationTest : BaseIntegrationTest() {
     @Test
     fun testGetPlatformInformation() {
         val platformInformation = acrolinxEndpoint.getPlatformInformation()

@@ -9,7 +9,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 
-class GetCapabilitiesTest: BaseIntegrationTest(){
+class GetCapabilitiesTest : BaseIntegrationTest() {
     @BeforeTest
     fun beforeTest() {
         assumeTrue(ACROLINX_API_TOKEN !== null)
