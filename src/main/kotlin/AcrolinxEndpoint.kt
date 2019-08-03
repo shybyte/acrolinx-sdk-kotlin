@@ -2,8 +2,11 @@ package com.acrolinx.client.sdk
 
 import com.acrolinx.client.sdk.exceptions.SSOException
 import com.acrolinx.client.sdk.exceptions.SignInException
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.future.future
 import kotlinx.coroutines.runBlocking
 import platform.Capabilities
+import java.util.concurrent.Future
 
 private const val HOUR_MS = 60L * 60 * 1000
 
@@ -33,7 +36,7 @@ class AcrolinxEndpoint(
         callback: InteractiveCallback,
         accessToken: AccessToken? = null,
         timeoutMs: Long = HOUR_MS
-    ): SignInSuccess = runBlocking {
+    ): Future<SignInSuccess> = GlobalScope.future {
         asyncEndpoint.signInInteractive(accessToken, timeoutMs) {
             callback.onInteractiveUrl(it.toString())
         }

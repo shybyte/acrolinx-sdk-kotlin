@@ -8,6 +8,7 @@ import integration.common.ACROLINX_API_TOKEN
 import integration.common.ACROLINX_API_USERNAME
 import integration.common.ACROLINX_URL
 import integration.common.BaseIntegrationTest
+import java.util.concurrent.ExecutionException
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.fail
@@ -27,9 +28,9 @@ class SignInInteractiveTest : BaseIntegrationTest() {
                 override fun onInteractiveUrl(url: String) {
                     interactiveUrl = url
                 }
-            }, timeoutMs = 10)
-            fail("Should throw exception but fot $signInSuccess")
-        } catch (e: SignInException) {
+            }, timeoutMs = 10).get()
+            fail("Should throw exception but was $signInSuccess")
+        } catch (e: ExecutionException) {
             assertThat(interactiveUrl!!).startsWith(ACROLINX_URL!!)
         }
     }
@@ -41,7 +42,7 @@ class SignInInteractiveTest : BaseIntegrationTest() {
             override fun onInteractiveUrl(url: String) {
                 interactiveUrl = url
             }
-        }, timeoutMs = 10, accessToken = ACROLINX_API_TOKEN)
+        }, timeoutMs = 10, accessToken = ACROLINX_API_TOKEN).get()
 
         assertThat(interactiveUrl).isNull()
 
