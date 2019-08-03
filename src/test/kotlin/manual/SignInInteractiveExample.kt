@@ -2,15 +2,14 @@ package manual
 
 import com.acrolinx.client.sdk.InteractiveCallback
 import integration.common.createTestAcrolinxEndpoint
-import java.net.URL
 
 object SignInInteractiveExample {
     @JvmStatic
     fun main(args: Array<String>) {
         val endpoint = createTestAcrolinxEndpoint()
 
-        val signInSuccess = endpoint.signInInteractive(object : InteractiveCallback<URL> {
-            override fun run(url: URL) {
+        val signInSuccess = endpoint.signInInteractive(object : InteractiveCallback {
+            override fun onInteractiveUrl(url: String) {
                 println("Please open the following URL: $url")
             }
         })
