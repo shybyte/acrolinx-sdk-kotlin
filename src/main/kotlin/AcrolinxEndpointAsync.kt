@@ -14,6 +14,7 @@ import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.header
 import io.ktor.client.request.request
 import io.ktor.http.*
+import kotlinx.coroutines.delay
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
@@ -88,7 +89,7 @@ class AcrolinxEndpointAsync(
                     if (System.currentTimeMillis() + sleepTimeMs > endTime) {
                         throw SignInException()
                     }
-                    Thread.sleep(sleepTimeMs)
+                    delay(sleepTimeMs)
                 }
             }
         }

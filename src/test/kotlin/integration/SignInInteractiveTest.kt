@@ -12,14 +12,16 @@ import integration.common.BaseIntegrationTest
 import io.mockk.Called
 import io.mockk.mockk
 import io.mockk.verify
+import java.util.concurrent.CancellationException
 import java.util.concurrent.ExecutionException
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.test.assertTrue
 import kotlin.test.fail
 
 
 class SignInInteractiveTest : BaseIntegrationTest() {
-    private val interactiveCallback = mockk<InteractiveCallback>()
+    private val interactiveCallback = mockk<InteractiveCallback>(relaxed = true)
 
     @BeforeTest
     fun beforeTest() {
@@ -48,5 +50,19 @@ class SignInInteractiveTest : BaseIntegrationTest() {
         assertThat(signInSuccess.accessToken.token).isNotEmpty()
         assertThat(signInSuccess.authorizedUsing).isEqualTo("ACROLINX_TOKEN")
         assertThat(signInSuccess.integration.properties["ca.filter"]).isNotNull()
+    }
+
+    @Test(expected = CancellationException::class)
+    fun cancelSignInInteractive() {
+        val signInSuccessFuture = acrolinxEndpoint.signInInteractive(interactiveCallback, timeoutMs = 2000)
+        Thread.sleep(100)
+
+        val cancelSuccess = signInSuccessFuture.cancel(true)
+        assertTrue(cancelSuccess, "cancelSuccess")
+
+        assertTrue(signInSuccessFuture.isCancelled, "isCancelled")
+        assertTrue(signInSuccessFuture.isDone, "isDone")
+
+        signInSuccessFuture.get()
     }
 }
