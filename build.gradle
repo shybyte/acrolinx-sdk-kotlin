@@ -46,6 +46,7 @@ dependencies {
 
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     testCompile 'com.willowtreeapps.assertk:assertk-jvm:0.18'
+    testImplementation "io.mockk:mockk:1.9.3"
     testCompile 'io.github.cdimascio:java-dotenv:5.1.1'
 }
 
