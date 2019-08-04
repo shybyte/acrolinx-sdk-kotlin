@@ -1,11 +1,14 @@
 package com.acrolinx.client.sdk
 
+import check.CheckRequest
+import check.CheckResponse
 import com.acrolinx.client.sdk.exceptions.SSOException
 import com.acrolinx.client.sdk.exceptions.SignInException
 import com.acrolinx.client.sdk.internal.*
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
 import io.ktor.client.features.json.JsonFeature
+import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.features.logging.DEFAULT
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logger
@@ -40,7 +43,10 @@ class AcrolinxEndpointAsync(
                 level = LogLevel.ALL
             }
         }
-        install(JsonFeature)
+        install(JsonFeature) {
+            // encodeDefaults = false prevents "= null" in produced JSON, which would irritate the server
+            serializer = KotlinxSerializer(Json(JsonConfiguration.Stable.copy(encodeDefaults = false)))
+        }
     }
 
     suspend fun getPlatformInformation(): PlatformInformation =
@@ -99,6 +105,16 @@ class AcrolinxEndpointAsync(
 
     suspend fun getCapabilities(accessToken: AccessToken): Capabilities =
         fetchDataFromApiPath("capabilities", Capabilities.serializer(), accessToken = accessToken)
+
+    suspend fun check(accessToken: AccessToken, checkRequest: CheckRequest): CheckResponse =
+        fetchFromApiPath(
+            "checking/checks",
+            CheckResponse.serializer(),
+            httpMethod = HttpMethod.Post,
+            accessToken = accessToken
+        ) {
+            body = checkRequest
+        }
 
 
     private suspend fun <T> fetchDataFromApiPath(

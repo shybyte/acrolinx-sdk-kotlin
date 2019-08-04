@@ -7,7 +7,6 @@ import assertk.assertions.isNotNull
 import com.acrolinx.client.sdk.InteractiveCallback
 import integration.common.ACROLINX_API_TOKEN
 import integration.common.ACROLINX_API_USERNAME
-import integration.common.ACROLINX_URL
 import integration.common.BaseIntegrationTest
 import io.mockk.Called
 import io.mockk.mockk
@@ -34,7 +33,7 @@ class SignInInteractiveTest : BaseIntegrationTest() {
             val signInSuccess = acrolinxEndpoint.signInInteractive(interactiveCallback, timeoutMs = 10).get()
             fail("Should throw exception but was $signInSuccess")
         } catch (e: ExecutionException) {
-            verify { interactiveCallback.onInteractiveUrl(match { it.startsWith(ACROLINX_URL!!) }) }
+            verify { interactiveCallback.onInteractiveUrl(match { it.startsWith(acrolinxUrl) }) }
         }
     }
 

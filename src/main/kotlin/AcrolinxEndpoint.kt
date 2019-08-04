@@ -1,5 +1,7 @@
 package com.acrolinx.client.sdk
 
+import check.CheckRequest
+import check.CheckResponse
 import com.acrolinx.client.sdk.exceptions.SSOException
 import com.acrolinx.client.sdk.exceptions.SignInException
 import kotlinx.coroutines.GlobalScope
@@ -44,4 +46,7 @@ class AcrolinxEndpoint(
 
     fun getCapabilities(accessToken: AccessToken): Capabilities =
         runBlocking { asyncEndpoint.getCapabilities(accessToken) }
+
+    fun check(accessToken: AccessToken, checkRequest: CheckRequest): CheckResponse =
+        runBlocking { asyncEndpoint.check(accessToken, checkRequest) }
 }
