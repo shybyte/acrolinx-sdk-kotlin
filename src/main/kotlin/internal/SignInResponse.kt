@@ -1,7 +1,6 @@
 package com.acrolinx.client.sdk.internal
 
 import com.acrolinx.client.sdk.SignInSuccess
-import internal.ProgressData
 import kotlinx.serialization.Decoder
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable

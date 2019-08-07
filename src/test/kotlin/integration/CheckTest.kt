@@ -9,10 +9,10 @@ import com.acrolinx.client.sdk.check.CheckOptions
 import com.acrolinx.client.sdk.check.CheckRequest
 import com.acrolinx.client.sdk.check.ContentEncoding
 import com.acrolinx.client.sdk.check.DocumentDescriptorRequest
+import com.acrolinx.client.sdk.platform.GuidanceProfile
 import integration.common.HasApiTokenTest
 import io.mockk.mockk
 import io.mockk.verify
-import platform.GuidanceProfile
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 

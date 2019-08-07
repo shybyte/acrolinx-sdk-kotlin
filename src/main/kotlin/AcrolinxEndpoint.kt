@@ -5,20 +5,20 @@ import com.acrolinx.client.sdk.check.CheckResponse
 import com.acrolinx.client.sdk.check.CheckResult
 import com.acrolinx.client.sdk.exceptions.SSOException
 import com.acrolinx.client.sdk.exceptions.SignInException
+import com.acrolinx.client.sdk.platform.Capabilities
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.future.future
 import kotlinx.coroutines.runBlocking
-import platform.Capabilities
 import java.util.concurrent.Future
 
 private const val HOUR_MS = 60L * 60 * 1000
 
 class AcrolinxEndpoint(
-    private val clientSignature: String,
-    private val clientVersion: String,
-    private var clientLocale: String,
+    clientSignature: String,
+    clientVersion: String,
+    clientLocale: String,
     acrolinxUrl: String,
-    private var enableHttpLogging: Boolean = false
+    enableHttpLogging: Boolean = false
 ) {
     private val asyncEndpoint = AcrolinxEndpointAsync(
         clientSignature = clientSignature,

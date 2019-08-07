@@ -4,6 +4,7 @@ import com.acrolinx.client.sdk.check.*
 import com.acrolinx.client.sdk.exceptions.SSOException
 import com.acrolinx.client.sdk.exceptions.SignInException
 import com.acrolinx.client.sdk.internal.*
+import com.acrolinx.client.sdk.platform.Capabilities
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
 import io.ktor.client.features.json.JsonFeature
@@ -21,7 +22,6 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import kotlinx.serialization.json.JsonObject
-import platform.Capabilities
 import java.net.URI
 
 private const val HOUR_MS = 60L * 60 * 1000

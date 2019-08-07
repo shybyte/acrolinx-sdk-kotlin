@@ -1,4 +1,4 @@
-package internal
+package com.acrolinx.client.sdk.internal
 
 import kotlinx.serialization.Serializable
 import kotlin.math.roundToLong

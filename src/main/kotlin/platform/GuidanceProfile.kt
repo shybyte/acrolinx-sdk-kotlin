@@ -1,4 +1,4 @@
-package platform
+package com.acrolinx.client.sdk.platform
 
 import kotlinx.serialization.Serializable
 
