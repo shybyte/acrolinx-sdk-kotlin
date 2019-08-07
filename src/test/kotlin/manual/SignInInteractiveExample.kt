@@ -12,7 +12,7 @@ object SignInInteractiveExample {
             override fun onInteractiveUrl(url: String) {
                 println("Please open the following URL: $url")
             }
-        }).get()
+        })
 
         println("accessToken = " + signInSuccess.accessToken.token)
         println("username = " + signInSuccess.user.username)
