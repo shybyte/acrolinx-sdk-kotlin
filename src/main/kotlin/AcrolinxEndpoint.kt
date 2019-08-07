@@ -1,7 +1,8 @@
 package com.acrolinx.client.sdk
 
-import check.CheckRequest
-import check.CheckResponse
+import com.acrolinx.client.sdk.check.CheckRequest
+import com.acrolinx.client.sdk.check.CheckResponse
+import com.acrolinx.client.sdk.check.CheckResult
 import com.acrolinx.client.sdk.exceptions.SSOException
 import com.acrolinx.client.sdk.exceptions.SignInException
 import kotlinx.coroutines.GlobalScope
@@ -49,4 +50,11 @@ class AcrolinxEndpoint(
 
     fun check(accessToken: AccessToken, checkRequest: CheckRequest): CheckResponse =
         runBlocking { asyncEndpoint.check(accessToken, checkRequest) }
+
+    fun checkAndGetResult(
+        accessToken: AccessToken,
+        checkRequest: CheckRequest,
+        progressListener: ProgressListener
+    ): CheckResult =
+        runBlocking { asyncEndpoint.checkAndGetResult(accessToken, checkRequest, progressListener::onProgress) }
 }

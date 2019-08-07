@@ -1,7 +1,6 @@
 package com.acrolinx.client.sdk
 
-import check.CheckRequest
-import check.CheckResponse
+import com.acrolinx.client.sdk.check.*
 import com.acrolinx.client.sdk.exceptions.SSOException
 import com.acrolinx.client.sdk.exceptions.SignInException
 import com.acrolinx.client.sdk.internal.*
@@ -91,11 +90,10 @@ class AcrolinxEndpointAsync(
             when (val pollResponse = fetchFromUrl(Url(signInResponse.links.poll), SignInPollResponseSerializer)) {
                 is SignInPollResponse.Success -> return pollResponse.data
                 is SignInPollResponse.Progress -> {
-                    val sleepTimeMs = (pollResponse.progress.retryAfter * 1000).toLong()
-                    if (System.currentTimeMillis() + sleepTimeMs > endTime) {
+                    if (System.currentTimeMillis() + pollResponse.progress.getRetryAfterMs() > endTime) {
                         throw SignInException()
                     }
-                    delay(sleepTimeMs)
+                    delay(pollResponse.progress.getRetryAfterMs())
                 }
             }
         }
@@ -115,6 +113,25 @@ class AcrolinxEndpointAsync(
         ) {
             body = checkRequest
         }
+
+    suspend fun checkAndGetResult(
+        accessToken: AccessToken,
+        checkRequest: CheckRequest,
+        onProgress: (progress: Progress) -> Unit
+    ): CheckResult {
+        val check = check(accessToken, checkRequest)
+
+        while (true) {
+            when (val pollResponse =
+                fetchFromUrl(Url(check.links.result), CheckPollResponseSerializer, accessToken = accessToken)) {
+                is CheckPollResponse.Success -> return pollResponse.data
+                is CheckPollResponse.Progress -> {
+                    onProgress(pollResponse.progress)
+                    delay(pollResponse.progress.getRetryAfterMs())
+                }
+            }
+        }
+    }
 
 
     private suspend fun <T> fetchDataFromApiPath(

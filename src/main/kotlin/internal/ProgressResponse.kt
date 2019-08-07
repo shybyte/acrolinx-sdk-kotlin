@@ -1,10 +1,11 @@
 package internal
 
 import kotlinx.serialization.Serializable
+import kotlin.math.roundToLong
 
 @Serializable
 class ProgressData(
-    val retryAfter: Double,
-    val percent: Double? = null,
-    val message: String? = null
-)
+    private val retryAfter: Double
+) {
+    fun getRetryAfterMs(): Long = (this.retryAfter * 1000.0).roundToLong()
+}

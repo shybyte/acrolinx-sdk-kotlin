@@ -1,4 +1,5 @@
-package check
+package com.acrolinx.client.sdk.check
+
 
 import kotlinx.serialization.Serializable
 
