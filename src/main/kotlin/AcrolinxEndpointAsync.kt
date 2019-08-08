@@ -17,7 +17,10 @@ import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.header
 import io.ktor.client.request.request
 import io.ktor.http.*
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
@@ -120,7 +123,19 @@ class AcrolinxEndpointAsync(
         onProgress: (progress: Progress) -> Unit
     ): CheckResult {
         val check = check(accessToken, checkRequest)
+        try {
+            return pollForCheckResult(accessToken, check, onProgress)
+        } catch (e: CancellationException) {
+            withContext(NonCancellable) { cancelCheck(accessToken, check) }
+            throw e
+        }
+    }
 
+    private suspend fun pollForCheckResult(
+        accessToken: AccessToken,
+        check: CheckResponse,
+        onProgress: (progress: Progress) -> Unit
+    ): CheckResult {
         while (true) {
             when (val pollResponse =
                 fetchFromUrl(Url(check.links.result), CheckPollResponseSerializer, accessToken = accessToken)) {
@@ -132,6 +147,14 @@ class AcrolinxEndpointAsync(
             }
         }
     }
+
+    private suspend fun cancelCheck(accessToken: AccessToken, checkResponse: CheckResponse): CheckCancelledResponse =
+        this.fetchFromUrl(
+            Url(checkResponse.links.cancel),
+            CheckCancelledResponse.serializer(),
+            HttpMethod.Delete,
+            accessToken
+        )
 
 
     private suspend fun <T> fetchDataFromApiPath(

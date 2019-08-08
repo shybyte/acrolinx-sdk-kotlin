@@ -3,7 +3,7 @@ package com.acrolinx.client.sdk.check
 
 import kotlinx.serialization.Serializable
 
-@Serializable()
+@Serializable
 class CheckRequest(
     val content: String,
     val checkOptions: CheckOptions,
