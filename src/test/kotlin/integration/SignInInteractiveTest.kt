@@ -5,7 +5,6 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isNotEmpty
 import assertk.assertions.isNotNull
 import com.acrolinx.client.sdk.InteractiveCallback
-import com.acrolinx.client.sdk.SignInSuccess
 import com.acrolinx.client.sdk.exceptions.SignInException
 import integration.common.ACROLINX_API_TOKEN
 import integration.common.ACROLINX_API_USERNAME
@@ -14,7 +13,6 @@ import io.mockk.Called
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Assume.assumeTrue
-import java.util.concurrent.Callable
 import java.util.concurrent.CancellationException
 import java.util.concurrent.Executors
 import kotlin.test.BeforeTest
@@ -56,9 +54,9 @@ class SignInInteractiveTest : BaseIntegrationTest() {
     @Test(expected = CancellationException::class)
     fun cancelSignInInteractive() {
         val executorService = Executors.newFixedThreadPool(1)
-        val signInSuccessFuture = executorService.submit(Callable<SignInSuccess> {
+        val signInSuccessFuture = executorService.submit {
             acrolinxEndpoint.signInInteractive(interactiveCallback, timeoutMs = 2000)
-        })
+        }
 
         Thread.sleep(100)
 
