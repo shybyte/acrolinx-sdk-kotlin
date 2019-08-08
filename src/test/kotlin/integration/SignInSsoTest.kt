@@ -9,7 +9,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 
-class SignInSssoTest : BaseIntegrationTest() {
+class SignInSsoTest : BaseIntegrationTest() {
     @BeforeTest
     fun beforeTest() {
         assumeTrue(ACROLINX_API_USERNAME != null && ACROLINX_API_SSO_TOKEN !== null)
