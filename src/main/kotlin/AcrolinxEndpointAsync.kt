@@ -1,10 +1,12 @@
 package com.acrolinx.client.sdk
 
 import com.acrolinx.client.sdk.check.*
+import com.acrolinx.client.sdk.exceptions.AcrolinxServiceException
 import com.acrolinx.client.sdk.exceptions.SSOException
 import com.acrolinx.client.sdk.exceptions.SignInException
 import com.acrolinx.client.sdk.internal.*
 import com.acrolinx.client.sdk.platform.Capabilities
+import internal.AcrolinxServiceError
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
 import io.ktor.client.features.json.JsonFeature
@@ -39,6 +41,7 @@ class AcrolinxEndpointAsync(
     private val acrolinxUrl = Url(acrolinxUrl)
     private val jsonDeserializer = Json(JsonConfiguration.Stable.copy(strictMode = false))
     private val httpClient: HttpClient = HttpClient(Apache) {
+        expectSuccess = false
         if (enableHttpLogging) {
             install(Logging) {
                 logger = Logger.DEFAULT
@@ -188,7 +191,7 @@ class AcrolinxEndpointAsync(
         block: (HttpRequestBuilder.() -> Unit) = {}
     ): T {
         val jsonObject = httpClient.request<JsonObject>(url) {
-            method = httpMethod
+            this.method = httpMethod
             contentType(ContentType.Application.Json)
             header("X-Acrolinx-Base-Url", acrolinxUrl)
             header("X-Acrolinx-Client-Locale", clientLocale)
@@ -198,7 +201,15 @@ class AcrolinxEndpointAsync(
             }
             this.apply(block)
         }
-        // TODO: Error Handling
+
+        val error = jsonObject.getObjectOrNull("error")
+        if (error != null) {
+            throw AcrolinxServiceException(
+                jsonDeserializer.fromJson(AcrolinxServiceError.serializer(), error),
+                AcrolinxServiceException.HttpRequest(url, httpMethod)
+            )
+        }
+
         return jsonDeserializer.fromJson(deserializer, jsonObject)
     }
 }
