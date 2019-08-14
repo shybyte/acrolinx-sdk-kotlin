@@ -54,4 +54,7 @@ class AcrolinxEndpoint(
         progressListener: ProgressListener
     ): CheckResult =
         runBlocking { asyncEndpoint.checkAndGetResult(accessToken, checkRequest, progressListener::onProgress) }
+
+    fun getContentAnalysisDashboard(accessToken: AccessToken, batchId: String): String =
+        runBlocking { asyncEndpoint.getContentAnalysisDashboard(accessToken, batchId) }
 }

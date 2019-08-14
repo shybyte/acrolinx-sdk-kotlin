@@ -59,7 +59,7 @@ class AcrolinxEndpointAsync(
 
     @Throws(SSOException::class)
     suspend fun signInWithSSO(genericToken: String, username: String): SignInSuccess = try {
-        fetchDataFromApiPath("auth/sign-ins", SignInSuccess.serializer(), HttpMethod.Post) {
+        fetchDataFromApiPath("auth/sign-ins", SignInSuccess.serializer(), httpMethod = HttpMethod.Post) {
             header("username", username)
             header("password", genericToken)
         }
@@ -74,7 +74,7 @@ class AcrolinxEndpointAsync(
         onInteractiveUrl: (interactiveSignInUrl: URI) -> Unit
     ): SignInSuccess {
         val signInResponse =
-            fetchFromApiPath("auth/sign-ins", SignInResponseSerializer, HttpMethod.Post, accessToken = accessToken)
+            fetchFromApiPath("auth/sign-ins", SignInResponseSerializer, accessToken, HttpMethod.Post)
 
         return when (signInResponse) {
             is SignInResponse.Success -> signInResponse.data
@@ -111,12 +111,7 @@ class AcrolinxEndpointAsync(
         fetchDataFromApiPath("capabilities", Capabilities.serializer(), accessToken = accessToken)
 
     suspend fun check(accessToken: AccessToken, checkRequest: CheckRequest): CheckResponse =
-        fetchFromApiPath(
-            "checking/checks",
-            CheckResponse.serializer(),
-            httpMethod = HttpMethod.Post,
-            accessToken = accessToken
-        ) {
+        fetchFromApiPath("checking/checks", CheckResponse.serializer(), accessToken, HttpMethod.Post) {
             body = checkRequest
         }
 
@@ -141,7 +136,7 @@ class AcrolinxEndpointAsync(
     ): CheckResult {
         while (true) {
             when (val pollResponse =
-                fetchFromUrl(Url(check.links.result), CheckPollResponseSerializer, accessToken = accessToken)) {
+                fetchFromUrl(Url(check.links.result), CheckPollResponseSerializer, accessToken)) {
                 is CheckPollResponse.Success -> return pollResponse.data
                 is CheckPollResponse.Progress -> {
                     onProgress(pollResponse.progress)
@@ -154,40 +149,45 @@ class AcrolinxEndpointAsync(
     private suspend fun cancelCheck(accessToken: AccessToken, checkResponse: CheckResponse): CheckCancelledResponse =
         this.fetchFromUrl(
             Url(checkResponse.links.cancel),
-            CheckCancelledResponse.serializer(),
-            HttpMethod.Delete,
-            accessToken
+            CheckCancelledResponse.serializer(), accessToken, HttpMethod.Delete
         )
 
+
+    suspend fun getContentAnalysisDashboard(accessToken: AccessToken, batchId: String): String =
+        fetchDataFromApiPath(
+            "checking/$batchId/contentanalysis", ContentAnalysisDashboard.serializer(), accessToken
+        ).links
+            .find { it.linkType == "shortWithoutAccessToken" }
+            .let { checkNotNull(it, { "Missing shortWithoutAccessToken" }) }.link
 
     private suspend fun <T> fetchDataFromApiPath(
         path: String,
         deserializer: KSerializer<T>,
-        httpMethod: HttpMethod = HttpMethod.Get,
         accessToken: AccessToken? = null,
+        httpMethod: HttpMethod = HttpMethod.Get,
         block: (HttpRequestBuilder.() -> Unit) = {}
-    ): T = fetchFromApiPath(path, SuccessResponse.serializer(deserializer), httpMethod, accessToken, block).data
+    ): T = fetchFromApiPath(path, SuccessResponse.serializer(deserializer), accessToken, httpMethod, block).data
 
     private suspend fun <T> fetchFromApiPath(
         path: String,
         deserializer: KSerializer<T>,
-        httpMethod: HttpMethod = HttpMethod.Get,
         accessToken: AccessToken? = null,
+        httpMethod: HttpMethod = HttpMethod.Get,
         block: (HttpRequestBuilder.() -> Unit) = {}
     ): T =
         fetchFromUrl(
             acrolinxUrl.copy(encodedPath = acrolinxUrl.encodedPath + "api/v1/" + path.encodeURLPath()),
             deserializer,
-            httpMethod,
             accessToken,
+            httpMethod,
             block
         )
 
     private suspend fun <T> fetchFromUrl(
         url: Url,
         deserializer: KSerializer<T>,
-        httpMethod: HttpMethod = HttpMethod.Get,
         accessToken: AccessToken? = null,
+        httpMethod: HttpMethod = HttpMethod.Get,
         block: (HttpRequestBuilder.() -> Unit) = {}
     ): T {
         val jsonObject = httpClient.request<JsonObject>(url) {

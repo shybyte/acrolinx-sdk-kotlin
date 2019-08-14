@@ -4,7 +4,7 @@ import internal.AcrolinxServiceError
 import io.ktor.http.HttpMethod
 import io.ktor.http.Url
 
-sealed class AcrolinxException : Exception()
+sealed class AcrolinxException(message: String? = null) : Exception(message)
 class SignInException : AcrolinxException()
 class SSOException : AcrolinxException()
 
